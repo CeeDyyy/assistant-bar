@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react'
 import * as emoji from 'node-emoji'
 
 export default function Home() {
-  const [sentence, setSentence] = useState("smilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmile")
-  const [word, setWord] = useState("smilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmilesmile")
+  const [sentence, setSentence] = useState("smile")
+  const [word, setWord] = useState("smile")
   const [suggestedWords, setSuggestedWords] = useState([])
   const [chats, setChats] = useState([])
 
