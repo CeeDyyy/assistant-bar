@@ -16,7 +16,7 @@ export default function Home() {
   function handleTyping(value) {
     setSentence(value)
     const splitedSentence = value.split(" ");
-    setWord(splitedSentence[splitedSentence.length -1])
+    setWord(splitedSentence[splitedSentence.length - 1])
   }
 
   function selectSuggestion(selected) {
