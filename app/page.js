@@ -15,12 +15,8 @@ export default function Home() {
 
   function handleTyping(value) {
     setSentence(value)
-
-    if (value.at(-1) === " " || value.at(-1) === undefined) {
-      setWord("")
-    } else {
-      setWord(word + value.at(-1))
-    }
+    const splitedSentence = value.split(" ");
+    setWord(splitedSentence[splitedSentence.length -1])
   }
 
   function selectSuggestion(selected) {
