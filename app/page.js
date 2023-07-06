@@ -71,7 +71,7 @@ export default function Home() {
       </div>
 
       {/* Assistant Bar */}
-      <div className="grid grid-cols-3 divide-x-2 h-24 bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1491002052546-bf38f186af56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1208&q=80')]">
+      <div className="grid grid-cols-3 divide-x-2 h-20 bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1491002052546-bf38f186af56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1208&q=80')]">
 
         <div className="grid grid-rows-2 font-medium px-4">
           <div className="grid justify-items-center content-center overflow-x-auto">
