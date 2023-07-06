@@ -1,113 +1,100 @@
-import Image from 'next/image'
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import * as emoji from 'node-emoji'
 
 export default function Home() {
+  const [sentence, setSentence] = useState("smile")
+  const [word, setWord] = useState("smile")
+  const [suggested, setSuggested] = useState([])
+  const [chats, setChats] = useState([])
+
+  useEffect(() => {
+    fetch(`https://api.datamuse.com/sug?s=${word}`).then((response) => response.json()).then((result) => setSuggested(result))
+  }, [word])
+
+  function handleTyping(value) {
+    setSentence(value)
+
+    if (value.at(-1) === " " || value.at(-1) === undefined) {
+      setWord("")
+    } else {
+      setWord(word + value.at(-1))
+    }
+  }
+
+  function selectSuggestion(selected) {
+    setWord("")
+    word.length ? setSentence(sentence.slice(0, -word.length) + selected + " ") : setSentence(sentence + selected + " ")
+  }
+
+  function handleSend(message) {
+    setSentence("")
+    setWord("")
+    setChats([...chats, message])
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="flex flex-col h-screen justify-between">
+      <div className="mx-auto mb-auto h-full w-[687px] bg-[url('https://images.unsplash.com/photo-1489549132488-d00b7eee80f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80')]">
+        <div className="flex flex-col h-full justify-between">
+
+          {/* Fake Chat Area */}
+          <div className="mb-auto flex gap-4 flex-col p-4">
+
+            <div className="flex gap-4">
+              <div className="rounded-full bg-gray-400 aspect-square h-10"></div>
+              <div className="rounded bg-white p-4">
+                Try to type something...
+              </div>
+            </div>
+
+            {chats.map((chat, index) =>
+              <div className="ml-auto flex gap-4" key={index}>
+                <div className="rounded bg-white p-4">
+                  {chat}
+                </div>
+                <div className="rounded-full bg-gray-400 aspect-square h-10"></div>
+              </div>
+            )}
+
+          </div>
+
+          {/* Typing Chat Area */}
+          <div className="p-4 flex items-center gap-4">
+            <textarea value={sentence} onChange={(e) => handleTyping(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleSend(sentence)} className="grow p-4 rounded" />
+            <button onClick={() => handleSend(sentence)} className="h-full p-4 rounded bg-blue-600 group/send hover:bg-blue-400 duration-100">
+              <div className="flex items-center gap-2 group-hover/send:scale-105 duration-100">
+                <p className="text-white">Send</p>
+                <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M20.33 3.66996C20.1408 3.48213 19.9035 3.35008 19.6442 3.28833C19.3849 3.22659 19.1135 3.23753 18.86 3.31996L4.23 8.19996C3.95867 8.28593 3.71891 8.45039 3.54099 8.67255C3.36307 8.89471 3.25498 9.16462 3.23037 9.44818C3.20576 9.73174 3.26573 10.0162 3.40271 10.2657C3.5397 10.5152 3.74754 10.7185 4 10.85L10.07 13.85L13.07 19.94C13.1906 20.1783 13.3751 20.3785 13.6029 20.518C13.8307 20.6575 14.0929 20.7309 14.36 20.73H14.46C14.7461 20.7089 15.0192 20.6023 15.2439 20.4239C15.4686 20.2456 15.6345 20.0038 15.72 19.73L20.67 5.13996C20.7584 4.88789 20.7734 4.6159 20.7132 4.35565C20.653 4.09541 20.5201 3.85762 20.33 3.66996ZM4.85 9.57996L17.62 5.31996L10.53 12.41L4.85 9.57996ZM14.43 19.15L11.59 13.47L18.68 6.37996L14.43 19.15Z" fill="white"></path> </g></svg>
+              </div>
+            </button>
+          </div>
+
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      {/* Assistant Bar */}
+      <div className="grid grid-cols-3 divide-x-2 h-24 bg-cover bg-center bg-[url('https://images.unsplash.com/photo-1491002052546-bf38f186af56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1208&q=80')]">
+        <div className="grid grid-rows-2 justify-items-center content-center gap-2 p-4 overflow-x-auto font-medium">
+          <p style={{ textShadow: '1px 1px 2px white' }}>{sentence}</p>
+          <p style={{ textShadow: '1px 1px 2px white' }}>{word}</p>
+        </div>
+        <div className="flex items-center gap-4 p-4 overflow-x-auto">
+          {suggested.map((suggested, index) =>
+            <div onClick={() => selectSuggestion(suggested.word)} className="cursor-pointer py-1 px-4 text-white bg-gray-600 rounded-full" key={index}>
+              {suggested.word}
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-8 p-4 overflow-x-auto">
+          {emoji.search(word).map((emoji, index) =>
+            <div onClick={() => selectSuggestion(emoji.emoji)} className="cursor-pointer text-3xl" key={index}>
+              {emoji.emoji}
+            </div>
+          )}
+        </div>
       </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   )
 }
