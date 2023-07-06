@@ -6,11 +6,11 @@ import * as emoji from 'node-emoji'
 export default function Home() {
   const [sentence, setSentence] = useState("smile")
   const [word, setWord] = useState("smile")
-  const [suggested, setSuggested] = useState([])
+  const [suggestedWords, setSuggestedWords] = useState([])
   const [chats, setChats] = useState([])
 
   useEffect(() => {
-    fetch(`https://api.datamuse.com/sug?s=${word}`).then((response) => response.json()).then((result) => setSuggested(result))
+    fetch(`https://api.datamuse.com/sug?s=${word}`).then((response) => response.json()).then((result) => setSuggestedWords(result))
   }, [word])
 
   function handleTyping(value) {
@@ -81,9 +81,9 @@ export default function Home() {
           <p style={{ textShadow: '1px 1px 2px white' }}>{word}</p>
         </div>
         <div className="flex items-center gap-4 p-4 overflow-x-auto">
-          {suggested.map((suggested, index) =>
-            <div onClick={() => selectSuggestion(suggested.word)} className="cursor-pointer py-1 px-4 text-white bg-gray-600 rounded-full" key={index}>
-              {suggested.word}
+          {suggestedWords.map((suggestedWord, index) =>
+            <div onClick={() => selectSuggestion(suggestedWord.word)} className="cursor-pointer py-1 px-4 text-white bg-gray-600 rounded-full" key={index}>
+              {suggestedWord.word}
             </div>
           )}
         </div>
